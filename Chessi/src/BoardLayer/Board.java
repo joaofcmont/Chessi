@@ -7,14 +7,13 @@ public class Board {
 
     private int rows;
     private int columns;
-    List<Piece> pieceList = new ArrayList<>();
+    private Piece[][] pieceList ;
 
-
-    public Board(){}
 
     public Board(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
+        pieceList = new Piece[rows][columns];
     }
 
     public int getRows() {
@@ -25,12 +24,12 @@ public class Board {
         return columns;
     }
 
-    public List<Piece> getPieceList() {
-        return pieceList;
+    public Piece piece(int row, int columns){
+        return pieceList[row][columns];
     }
 
-    public void setPieceList(List<Piece> pieceList) {
-        this.pieceList = pieceList;
+    public Piece piece(Position position){
+        return pieceList[position.getRow()][position.getColumn()];
     }
 
 }
