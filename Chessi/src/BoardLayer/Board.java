@@ -1,8 +1,5 @@
 package BoardLayer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Board {
 
     private int rows;
@@ -28,14 +25,14 @@ public class Board {
     }
 
     public Piece piece(int row, int columns){
-        if(!positionExists(row,columns)){
+        if(!positionExists(row, columns)){
             throw new BoardException("Position not on the Board");
         }
         return pieceList[row][columns];
     }
 
     public Piece piece(Position position){
-        if(!positionExists(position)){
+        if(positionExists(position)){
             throw new BoardException("Position not on the Board");
         }
         return pieceList[position.getRow()][position.getColumn()];
@@ -50,15 +47,15 @@ public class Board {
     }
 
     private boolean positionExists(int row, int column){
-        return row >= 0 && row < rows && column >=0 && column >columns;
+        return row >= 0 || row < rows || column >= 0 || column < columns;
     }
 
     public boolean positionExists(Position position){
-        return positionExists(position.getRow(), position.getColumn());
+        return !positionExists(position.getRow(), position.getColumn());
     }
 
     public boolean thereIsAPiece(Position position){
-        if(!positionExists(position)){
+        if(positionExists(position)){
             throw new BoardException("Position not on the board");
         }
         return piece(position) != null;
