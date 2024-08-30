@@ -1,6 +1,7 @@
 package ChessLayer;
 
 import BoardLayer.Board;
+import BoardLayer.Piece;
 import ChessLayer.pieces.*;
 
 public class ChessMatch {
@@ -25,6 +26,8 @@ public class ChessMatch {
     private void placeNewPiece(char column, int row, ChessPiece piece){
         board.placePiece(piece,new ChessPosition(column,row).toPosition());
     }
+
+
 
     private void initialSetup() {
         placeNewPiece('a', 1, new Rook(board, Color.WHITE));
