@@ -1,7 +1,7 @@
 # Chessi
 This is a chess game full on JAVA
 
-## Usage
+## Usage ON CLI
 ```
 // Compile it
 javac BoardLayer/*.java ChessLayer/*.java ChessLayer/pieces/*.java program/Main.java
