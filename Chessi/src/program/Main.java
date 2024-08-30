@@ -12,7 +12,7 @@ public class Main {
         ChessMatch chessMatch = new ChessMatch();
         Scanner sc = new Scanner(System.in);
 
-        while(true) {
+        while (true) {
             UI.printBoard(chessMatch.getPieces());
             System.out.println();
             System.out.print("Source: ");
