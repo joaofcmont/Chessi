@@ -1,8 +1,7 @@
 # Chessi
 This is a chess game full on JAVA
 
-You can run this code by: 
-
+## Usage
 ```
 # Compile it
 javac BoardLayer/*.java ChessLayer/*.java ChessLayer/pieces/*.java program/Main.java
