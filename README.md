@@ -3,10 +3,10 @@ This is a chess game full on JAVA
 
 ## Usage
 ```
-# Compile it
+// Compile it
 javac BoardLayer/*.java ChessLayer/*.java ChessLayer/pieces/*.java program/Main.java
 
-# To run it, use:
+// To run it, use:
 java program.Main
 ```
 
