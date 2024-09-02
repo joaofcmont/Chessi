@@ -5,6 +5,7 @@ import ChessLayer.ChessMatch;
 import ChessLayer.ChessPiece;
 import ChessLayer.ChessPosition;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -26,6 +27,9 @@ public class Main {
 
             ChessPiece capturedPiece = chessMatch.performChessMove(source,target);
             }catch(ChessException e){
+                System.out.println(e.getMessage());
+                sc.nextLine();
+            }catch (InputMismatchException e){
                 System.out.println(e.getMessage());
                 sc.nextLine();
             }
