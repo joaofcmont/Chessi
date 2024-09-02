@@ -11,5 +11,6 @@ java program.Main
 ```
 ![Chessi Game](https://github.com/user-attachments/assets/89d5363b-a92d-43f6-93c2-ed135d24d882)
 
+![Possible Moves](https://github.com/user-attachments/assets/901e35b0-e285-40fe-9fcf-d9632120169c)
 
 ![chess-system-design](https://github.com/user-attachments/assets/1a0c9e10-227f-4493-9994-12a92a6ec781)
