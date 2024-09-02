@@ -9,13 +9,13 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ChessException, InputMismatchException{
 
         ChessMatch chessMatch = new ChessMatch();
         Scanner sc = new Scanner(System.in);
 
         while (true) {
-            try{
+
             UI.clearScreen();
             UI.printBoard(chessMatch.getPieces());
             System.out.println();
@@ -26,10 +26,6 @@ public class Main {
             ChessPosition target = UI.readChessPosition(sc);
 
             ChessPiece capturedPiece = chessMatch.performChessMove(source,target);
-            }catch(ChessException | InputMismatchException e){
-                System.out.println(e.getMessage());
-                sc.nextLine();
-            }
 
         }
     }
