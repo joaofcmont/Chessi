@@ -1,5 +1,6 @@
 package program;
 
+import ChessLayer.ChessException;
 import ChessLayer.ChessMatch;
 import ChessLayer.ChessPiece;
 import ChessLayer.ChessPosition;
@@ -13,6 +14,8 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         while (true) {
+            try{
+            UI.clearScreen();
             UI.printBoard(chessMatch.getPieces());
             System.out.println();
             System.out.print("Source: ");
@@ -22,6 +25,10 @@ public class Main {
             ChessPosition target = UI.readChessPosition(sc);
 
             ChessPiece capturedPiece = chessMatch.performChessMove(source,target);
+            }catch(ChessException e){
+                System.out.println(e.getMessage());
+                sc.nextLine();
+            }
 
         }
     }
