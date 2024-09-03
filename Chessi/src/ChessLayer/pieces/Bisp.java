@@ -22,7 +22,7 @@ public class Bisp extends ChessPiece {
         Position p = new Position(position.getRow(), position.getColumn());
 
         //check diagonal top-left
-        p.setValues(p.getRow()-1,p.getColumn()-1);
+        p.setValues(position.getRow()-1,position.getColumn()-1);
         while(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)){
             mat[p.getRow()][p.getColumn()] = true;
             p.setValues(p.getRow()-1, p.getColumn()-1);
@@ -31,7 +31,7 @@ public class Bisp extends ChessPiece {
             mat[p.getRow()][p.getColumn()] = true;
         }
         //diagonal top-right
-        p.setValues(p.getRow()-1,p.getColumn()+1);
+        p.setValues(position.getRow()-1,position.getColumn()+1);
         while(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)){
             mat[p.getRow()][p.getColumn()] = true;
             p.setValues(p.getRow()-1, p.getColumn()+1);
@@ -42,7 +42,7 @@ public class Bisp extends ChessPiece {
 
 
         //check diagonal down-right
-        p.setValues(p.getRow()+1,p.getColumn()+1);
+        p.setValues(position.getRow()+1,position.getColumn()+1);
         while(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)){
             mat[p.getRow()][p.getColumn()] = true;
             p.setValues(p.getRow()+1, p.getColumn()+1);
@@ -51,7 +51,7 @@ public class Bisp extends ChessPiece {
             mat[p.getRow()][p.getColumn()] = true;
         }
         //check diagonal down-left
-        p.setValues(p.getRow()+1,p.getColumn()-1);
+        p.setValues(position.getRow()+1,position.getColumn()-1);
         while(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)){
             mat[p.getRow()][p.getColumn()] = true;
             p.setValues(p.getRow()+1, p.getColumn()-1);
