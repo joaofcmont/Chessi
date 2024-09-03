@@ -1,6 +1,7 @@
 package ChessLayer.pieces;
 
 import BoardLayer.Board;
+import BoardLayer.Position;
 import ChessLayer.ChessPiece;
 import ChessLayer.Color;
 
@@ -17,6 +18,9 @@ public class Pawn extends ChessPiece {
     @Override
     public boolean[][] PossibleMoves() {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
+        Position p = new Position(position.getRow(), position.getColumn());
+
+
         return mat;
     }
 }
