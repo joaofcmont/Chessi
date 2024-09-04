@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 60px);
+            grid-template-rows: repeat(8, 60px);
+        }
+        .cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .cell:nth-child(odd) {
+            background-color: #769656; /* Dark square */
+        }
+        .cell:nth-child(even) {
+            background-color: #eeeed2; /* Light square */
+        }
+        img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+<div class="chessboard" id="board">
+    <!-- The board will be populated by JavaScript -->
+</div>
+<script>
+    // Initialize the chess board in JavaScript
+    const initialBoard = [
+        ["images/black-rook.png", "images/black-knight.png", "images/black-bishop.png", "images/black-queen.png", "images/black-king.png", "images/black-bishop.png", "images/black-knight.png", "images/black-rook.png"],
+        ["images/black-pawn.png", "images/black-pawn.png", "images/black-pawn.png", "images/black-pawn.png", "images/black-pawn.png", "images/black-pawn.png", "images/black-pawn.png", "images/black-pawn.png"],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        ["images/white-pawn.png", "images/white-pawn.png", "images/white-pawn.png", "images/white-pawn.png", "images/white-pawn.png", "images/white-pawn.png", "images/white-pawn.png", "images/white-pawn.png"],
+        ["images/white-rook.png", "images/white-knight.png", "images/white-bishop.png", "images/white-queen.png", "images/white-king.png", "images/white-bishop.png", "images/white-knight.png", "images/white-rook.png"]
+    ];
+
+    // Render the initial board
+    function renderBoard(board) {
+        const boardElement = document.getElementById('board');
+        boardElement.innerHTML = ''; // Clear previous content
+        for (let row = 0; row < board.length; row++) {
+            for (let col = 0; col < board[row].length; col++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                if ((row + col) % 2 === 0) {
+                    cell.style.backgroundColor = '#eeeed2'; // Light square
+                } else {
+                    cell.style.backgroundColor = '#769656'; // Dark square
+                }
+                if (board[row][col]) {
+                    const img = document.createElement('img');
+                    img.src = board[row][col];
+                    cell.appendChild(img);
+                }
+                boardElement.appendChild(cell);
+            }
+        }
+    }
+
+    // Render the initial board setup
+    renderBoard(initialBoard);
+
+    // Function to update the board, called from Java
+    function updateBoard(fen) {
+        // Logic to update the board from a FEN string or other format
+        console.log('Update board called with:', fen);
+        // Implement logic here based on FEN or other state representation
+    }
+</script>
+</body>
+</html>
