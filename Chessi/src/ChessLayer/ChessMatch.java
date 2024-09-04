@@ -37,12 +37,17 @@ public class ChessMatch {
         }
     }
 
-
     private void validateTargetPosition(Position source,Position target){
         //check if the target move is valid
         if(!board.piece(source).possibleMove(target)){
             throw new ChessException("The chosen piece cannot move to the Target position");
         }
+    }
+
+    public boolean[][] possibleMoves(ChessPosition p){
+        Position position = p.toPosition();
+        validateSourcePosition(position);
+        return board.piece(position).possibleMoves();
     }
 
 
