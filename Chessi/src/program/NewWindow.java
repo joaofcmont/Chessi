@@ -49,7 +49,7 @@ public class NewWindow {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 JButton button = new JButton();
-                button.setPreferredSize(new Dimension(64, 64));
+                button.setPreferredSize(new Dimension(60, 60));
                 button.setFocusPainted(false);
                 button.setBorderPainted(false);
                 button.setOpaque(true);
