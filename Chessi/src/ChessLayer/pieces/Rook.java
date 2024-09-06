@@ -3,13 +3,17 @@ package ChessLayer.pieces;
 import BoardLayer.Board;
 import BoardLayer.Piece;
 import BoardLayer.Position;
+import ChessLayer.ChessMatch;
 import ChessLayer.ChessPiece;
 import ChessLayer.Color;
 
 public class Rook extends ChessPiece {
 
-    public Rook(Board board, Color color) {
+    private ChessMatch chessMatch;
+
+    public Rook(Board board, Color color,ChessMatch chessMatch) {
         super(board, color);
+        this.chessMatch = chessMatch;
     }
 
     @Override
@@ -58,6 +62,24 @@ public class Rook extends ChessPiece {
         if(getBoard().positionExists(p) && isThereOpponentPiece(p)){
             mat[p.getRow()][p.getColumn()] = true;
         }
+
+        // Add castling moves if the rook has not moved yet and if the king is in the same row
+        if (getMoveCount() == 0) {
+            int row = position.getRow();
+            // Kingside castling
+            Position kingsideKingPosition = new Position(row, position.getColumn() + 3);
+            if (chessMatch.canCastle(position, kingsideKingPosition)) {
+                mat[row][position.getColumn() + 2] = true;
+            }
+
+            // Queenside castling
+            Position queensideKingPosition = new Position(row, position.getColumn() - 4);
+            if (chessMatch.canCastle(position, queensideKingPosition)) {
+                mat[row][position.getColumn() - 2] = true;
+            }
+        }
+
+
         return mat;
     }
 }
