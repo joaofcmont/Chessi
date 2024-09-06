@@ -16,7 +16,7 @@ public class NewWindow {
     JFrame frame = new JFrame();
     JPanel boardPanel = new JPanel(new GridLayout(8, 8));
     JButton[][] boardButtons = new JButton[8][8];
-    private ChessMatch chessMatch;
+    private final ChessMatch chessMatch;
 
     NewWindow() {
         chessMatch = new ChessMatch();
