@@ -3,11 +3,13 @@ package ChessLayer;
 import BoardLayer.Board;
 import BoardLayer.Piece;
 import BoardLayer.Position;
+
 import ChessLayer.pieces.*;
 
 public class ChessMatch {
 
     private final Board board;
+    private ChessPiece enPassantVulnerable;
 
     public ChessMatch(){
         board = new Board(8,8);
@@ -50,6 +52,9 @@ public class ChessMatch {
         return board.piece(position).possibleMoves();
     }
 
+    public ChessPiece getEnPassantVulnerable() {
+        return enPassantVulnerable;
+    }
 
     public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition){
         Position source = sourcePosition.toPosition();
