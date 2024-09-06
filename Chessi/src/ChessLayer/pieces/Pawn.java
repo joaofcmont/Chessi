@@ -23,6 +23,7 @@ public class Pawn extends ChessPiece {
     @Override
     public boolean[][] possibleMoves() {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
+
         Position p = new Position(position.getRow(), position.getColumn());
 
         if (getColor() == Color.WHITE) {
@@ -44,12 +45,14 @@ public class Pawn extends ChessPiece {
 
             // Capture diagonally to the left
             p.setValues(position.getRow() - 1, position.getColumn() - 1);
+            // Check if there is an opponent piece to capture diagonally left
             if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
                 mat[p.getRow()][p.getColumn()] = true;
             }
 
             // Capture diagonally to the right
             p.setValues(position.getRow() - 1, position.getColumn() + 1);
+            // Check if there is an opponent piece to capture diagonally right
             if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
                 mat[p.getRow()][p.getColumn()] = true;
             }
@@ -84,12 +87,14 @@ public class Pawn extends ChessPiece {
 
             // Capture diagonally to the left
             p.setValues(position.getRow() + 1, position.getColumn() - 1);
+            // Check if there is an opponent piece to capture diagonally left
             if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
                 mat[p.getRow()][p.getColumn()] = true;
             }
 
             // Capture diagonally to the right
             p.setValues(position.getRow() + 1, position.getColumn() + 1);
+            // Check if there is an opponent piece to capture diagonally right
             if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
                 mat[p.getRow()][p.getColumn()] = true;
             }
@@ -109,6 +114,7 @@ public class Pawn extends ChessPiece {
 
         return mat;
     }
+
 
 
 
