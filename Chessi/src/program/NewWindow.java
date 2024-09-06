@@ -121,23 +121,34 @@ public class NewWindow {
     private Position selectedPosition = null;
 
     private void handleButtonClick(int row, int col) {
+        Position clickedPosition = new Position(row, col);
+
+        // If no position is selected, select the clicked position and highlight possible moves
         if (selectedPosition == null) {
-            selectedPosition = new Position(row, col);
+            selectedPosition = clickedPosition;
             highlightPossibleMoves(row, col);
         } else {
-            try {
-                ChessPosition source = ChessPosition.fromPosition(selectedPosition);
-                ChessPosition target = ChessPosition.fromPosition(new Position(row, col));
-                chessMatch.performChessMove(source, target);
-                updateBoardGUI();
-            } catch (ChessException e) {
-                JOptionPane.showMessageDialog(frame, e.getMessage(), "Chess Error", JOptionPane.ERROR_MESSAGE);
-            } finally {
+            // If the same position is clicked again, clear selection and highlights
+            if (selectedPosition.equals(clickedPosition)) {
                 clearHighlights();
                 selectedPosition = null;
+            } else {
+                // Try to move from selectedPosition to the clicked position
+                try {
+                    ChessPosition source = ChessPosition.fromPosition(selectedPosition);
+                    ChessPosition target = ChessPosition.fromPosition(clickedPosition);
+                    chessMatch.performChessMove(source, target);
+                    updateBoardGUI();
+                } catch (ChessException e) {
+                    JOptionPane.showMessageDialog(frame, e.getMessage(), "Chess Error", JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    clearHighlights();
+                    selectedPosition = null;
+                }
             }
         }
     }
+
 
     private void highlightPossibleMoves(int row, int col) {
         ChessPosition position = ChessPosition.fromPosition(new Position(row, col));

@@ -35,21 +35,29 @@ public class ChessMatch {
         board.placePiece(piece,new ChessPosition(column,row).toPosition());
     }
 
-    private void validateSourcePosition(Position position){
-        if(!board.thereIsAPiece(position)){
-            throw new ChessException("There is no piece on the source position");
+    private void validateSourcePosition(Position position) {
+        if (!board.thereIsAPiece(position)) {
+            return;
         }
-        if(!board.piece(position).isThereAnyPossibleMove()){
-            throw new ChessException("There is no possible move for the chosen piece");
+
+        // Check if the selected piece has any possible moves
+        if (!board.piece(position).isThereAnyPossibleMove()) {
+            return;
         }
     }
 
-    private void validateTargetPosition(Position source,Position target){
-        //check if the target move is valid
-        if(!board.piece(source).possibleMove(target)){
-            throw new ChessException("The chosen piece cannot move to the Target position");
+    private void validateTargetPosition(Position source, Position target) {
+        // Check if the source and target positions are the same
+        if (source.equals(target)) {
+            return; // No validation needed if the piece is not moving
+        }
+
+        // Check if the target move is valid
+        if (!board.piece(source).possibleMove(target)) {
+            return;
         }
     }
+
 
     public boolean[][] possibleMoves(ChessPosition p){
         Position position = p.toPosition();
@@ -61,23 +69,30 @@ public class ChessMatch {
         return enPassantVulnerable;
     }
 
-    public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition){
+    public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
         Position source = sourcePosition.toPosition();
         Position target = targetPosition.toPosition();
-        validateSourcePosition(source);
-        validateTargetPosition(source,target);
-        Piece capturedPiece = makeMove(source,target);
 
-        ChessPiece movedPiece = (ChessPiece)board.piece(target);
+        // Check if the source and target positions are the same
+        if (source.equals(target)) {
+            return null; // No move is performed if the source and target positions are identical
+        }
+
+        validateSourcePosition(source);
+        validateTargetPosition(source, target);
+
+        Piece capturedPiece = makeMove(source, target);
+        ChessPiece movedPiece = (ChessPiece) board.piece(target);
+
         // #specialmove en passant
         if (movedPiece instanceof Pawn && (target.getRow() == source.getRow() - 2 || target.getRow() == source.getRow() + 2)) {
             enPassantVulnerable = movedPiece;
-        }
-        else {
+        } else {
             enPassantVulnerable = null;
         }
-        return (ChessPiece)capturedPiece;
+        return (ChessPiece) capturedPiece;
     }
+
 
 
     private Piece makeMove(Position source, Position target){
