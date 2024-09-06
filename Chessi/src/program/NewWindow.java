@@ -17,6 +17,7 @@ public class NewWindow {
     JPanel boardPanel = new JPanel(new GridLayout(8, 8));
     JButton[][] boardButtons = new JButton[8][8];
     private final ChessMatch chessMatch;
+    private final Color highlightColor = new Color(186, 202, 68);    // Light green for highlights
 
     NewWindow() {
         chessMatch = new ChessMatch();
@@ -156,7 +157,7 @@ public class NewWindow {
         for (int r = 0; r < 8; r++) {
             for (int c = 0; c < 8; c++) {
                 if (possibleMoves[r][c]) {
-                    boardButtons[r][c].setBackground(Color.YELLOW);
+                    boardButtons[r][c].setBackground(highlightColor);
                 }
             }
         }
