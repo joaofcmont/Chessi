@@ -12,11 +12,11 @@ public class Pawn extends ChessPiece {
 
     public Pawn(Board board, Color color, ChessMatch chessMatch) {
         super(board, color);
-        this.chessMatch=chessMatch;
+        this.chessMatch = chessMatch;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "P";
     }
 
@@ -24,98 +24,48 @@ public class Pawn extends ChessPiece {
     public boolean[][] possibleMoves() {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
 
-        Position p = new Position(position.getRow(), position.getColumn());
+        Position p = new Position(0, 0);
+        int direction = (getColor() == Color.WHITE) ? -1 : 1;
 
-        if (getColor() == Color.WHITE) {
-            // Standard one square forward move
-            p.setValues(position.getRow() - 1, position.getColumn());
-            // Check if the next square is empty (pawns cannot capture forward)
-            if (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) {
-                mat[p.getRow()][p.getColumn()] = true;
-            }
+        // Move one square forward
+        p.setValues(position.getRow() + direction, position.getColumn());
+        if (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
 
-            // Two squares forward move on the first move only
-            p.setValues(position.getRow() - 2, position.getColumn());
-            Position p2 = new Position(position.getRow() - 1, position.getColumn());
-            // Check if the path is clear and it's the pawn's first move
-            if (getMoveCount() == 0 && getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)
-                    && getBoard().positionExists(p2) && !getBoard().thereIsAPiece(p2)) {
-                mat[p.getRow()][p.getColumn()] = true;
-            }
-
-            // Capture diagonally to the left
-            p.setValues(position.getRow() - 1, position.getColumn() - 1);
-            // Check if there is an opponent piece to capture diagonally left
-            if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
-                mat[p.getRow()][p.getColumn()] = true;
-            }
-
-            // Capture diagonally to the right
-            p.setValues(position.getRow() - 1, position.getColumn() + 1);
-            // Check if there is an opponent piece to capture diagonally right
-            if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
-                mat[p.getRow()][p.getColumn()] = true;
-            }
-
-            // En passant special move for white
-            if (position.getRow() == 3) {
-                Position left = new Position(position.getRow(), position.getColumn() - 1);
-                if (getBoard().positionExists(left) && getBoard().piece(left) == chessMatch.getEnPassantVulnerable()) {
-                    mat[left.getRow() - 1][left.getColumn()] = true;
-                }
-                Position right = new Position(position.getRow(), position.getColumn() + 1);
-                if (getBoard().positionExists(right) && getBoard().piece(right) == chessMatch.getEnPassantVulnerable()) {
-                    mat[right.getRow() - 1][right.getColumn()] = true;
+            // Move two squares forward on first move
+            if (getMoveCount() == 0) {
+                p.setValues(position.getRow() + 2 * direction, position.getColumn());
+                Position p2 = new Position(position.getRow() + direction, position.getColumn());
+                if (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p) &&
+                        getBoard().positionExists(p2) && !getBoard().thereIsAPiece(p2)) {
+                    mat[p.getRow()][p.getColumn()] = true;
                 }
             }
-        } else {
-            // Standard one square forward move
-            p.setValues(position.getRow() + 1, position.getColumn());
-            // Check if the next square is empty (pawns cannot capture forward)
-            if (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) {
-                mat[p.getRow()][p.getColumn()] = true;
-            }
+        }
 
-            // Two squares forward move on the first move only
-            p.setValues(position.getRow() + 2, position.getColumn());
-            Position p2 = new Position(position.getRow() + 1, position.getColumn());
-            // Check if the path is clear and it's the pawn's first move
-            if (getMoveCount() == 0 && getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)
-                    && getBoard().positionExists(p2) && !getBoard().thereIsAPiece(p2)) {
-                mat[p.getRow()][p.getColumn()] = true;
-            }
+        // Diagonal captures
+        p.setValues(position.getRow() + direction, position.getColumn() - 1);
+        if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+        }
 
-            // Capture diagonally to the left
-            p.setValues(position.getRow() + 1, position.getColumn() - 1);
-            // Check if there is an opponent piece to capture diagonally left
-            if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
-                mat[p.getRow()][p.getColumn()] = true;
-            }
+        p.setValues(position.getRow() + direction, position.getColumn() + 1);
+        if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+        }
 
-            // Capture diagonally to the right
-            p.setValues(position.getRow() + 1, position.getColumn() + 1);
-            // Check if there is an opponent piece to capture diagonally right
-            if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
-                mat[p.getRow()][p.getColumn()] = true;
+        // En passant special move
+        if (position.getRow() == (getColor() == Color.WHITE ? 3 : 4)) {
+            Position left = new Position(position.getRow(), position.getColumn() - 1);
+            if (getBoard().positionExists(left) && isThereOpponentPiece(left) && getBoard().piece(left) == chessMatch.getEnPassantVulnerable()) {
+                mat[left.getRow() + direction][left.getColumn()] = true;
             }
-
-            // En passant special move for black
-            if (position.getRow() == 4) {
-                Position left = new Position(position.getRow(), position.getColumn() - 1);
-                if (getBoard().positionExists(left) && getBoard().piece(left) == chessMatch.getEnPassantVulnerable()) {
-                    mat[left.getRow() + 1][left.getColumn()] = true;
-                }
-                Position right = new Position(position.getRow(), position.getColumn() + 1);
-                if (getBoard().positionExists(right) && getBoard().piece(right) == chessMatch.getEnPassantVulnerable()) {
-                    mat[right.getRow() + 1][right.getColumn()] = true;
-                }
+            Position right = new Position(position.getRow(), position.getColumn() + 1);
+            if (getBoard().positionExists(right) && isThereOpponentPiece(right) && getBoard().piece(right) == chessMatch.getEnPassantVulnerable()) {
+                mat[right.getRow() + direction][right.getColumn()] = true;
             }
         }
 
         return mat;
     }
-
-
-
-
 }
