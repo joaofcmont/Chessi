@@ -9,17 +9,20 @@ import ChessLayer.pieces.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.awt.Color.getColor;
 
 public class ChessMatch {
 
     private final Board board;
+    private int turn;
+    private Color currentPlayer;
     private ChessPiece enPassantVulnerable;
-    private List<Piece> piecesOnTheBoard = new ArrayList<>();
-    private List<Piece> capturedPieces = new ArrayList<>();
+    private final List<Piece> piecesOnTheBoard = new ArrayList<>();
+    private final List<Piece> capturedPieces = new ArrayList<>();
 
     public ChessMatch(){
         board = new Board(8,8);
+        turn = 1;
+        currentPlayer=Color.WHITE;
         initialSetup();
     }
 
@@ -33,6 +36,20 @@ public class ChessMatch {
         return match;
     }
 
+    public int getTurn(){
+        return turn;
+    }
+
+    public Color getCurrentPlayer(){
+        return currentPlayer;
+    }
+
+    private void nextTurn(){
+        turn++;
+        currentPlayer = (currentPlayer== Color.WHITE)? Color.BLACK : Color.WHITE;
+    }
+
+
     private void placeNewPiece(char column, int row, ChessPiece piece){
         board.placePiece(piece,new ChessPosition(column,row).toPosition());
     }
@@ -40,6 +57,9 @@ public class ChessMatch {
     private void validateSourcePosition(Position position) {
         if (!board.thereIsAPiece(position)) {
             throw new ChessException("There is no piece on the source position");
+        }
+        if(currentPlayer!=((ChessPiece) board.piece(position)).getColor()){
+            throw new ChessException("The chosen piece is not yours");
         }
 
         // Check if the selected piece has any possible moves
@@ -110,7 +130,7 @@ public class ChessMatch {
         } else {
             enPassantVulnerable = null;
         }
-
+        nextTurn();
         return (ChessPiece) capturedPiece;
     }
 
@@ -178,11 +198,7 @@ public class ChessMatch {
 
         // Check that the king is not in check and does not pass through or land in check
         Position kingPassThroughPosition = new Position(source.getRow(), source.getColumn() + direction);
-        if (isSquareUnderAttack(source, king.getColor()) || isSquareUnderAttack(kingPassThroughPosition, king.getColor()) || isSquareUnderAttack(target, king.getColor())) {
-            return false;
-        }
-
-        return true;
+        return !isSquareUnderAttack(source, king.getColor()) && !isSquareUnderAttack(kingPassThroughPosition, king.getColor()) && !isSquareUnderAttack(target, king.getColor());
     }
 
 
@@ -227,6 +243,8 @@ public class ChessMatch {
 
         return capturedPiece;
     }
+
+
 
 
     private void initialSetup() {
