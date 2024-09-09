@@ -47,7 +47,7 @@ public class ChessMatch {
 
     private void nextTurn(){
         turn++;
-        currentPlayer = (currentPlayer== Color.WHITE)? Color.BLACK : Color.WHITE;
+        currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
     }
 
 
@@ -59,10 +59,9 @@ public class ChessMatch {
         if (!board.thereIsAPiece(position)) {
             throw new ChessException("There is no piece on the source position");
         }
-        if(currentPlayer!= ((ChessPiece) board.piece(position)).getColor()){
+        if(currentPlayer != ((ChessPiece) board.piece(position)).getColor()){
             throw new ChessException("The chosen piece is not yours");
         }
-
         // Check if the selected piece has any possible moves
         if (!board.piece(position).isThereAnyPossibleMove()) {
             throw new ChessException("There is no possible move for the chosen piece");
