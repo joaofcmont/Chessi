@@ -24,6 +24,8 @@ public class NewWindow {
     NewWindow() {
         chessMatch = new ChessMatch();
         initializeGUI();
+        printMatch(chessMatch);
+
     }
 
     private void initializeGUI() {
@@ -36,6 +38,7 @@ public class NewWindow {
         boardButtons = new JButton[8][8];
 
         initializeBoard();
+
 
         frame.add(boardPanel, BorderLayout.CENTER);
         frame.setVisible(true);

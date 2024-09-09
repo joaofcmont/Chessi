@@ -8,7 +8,7 @@ import ChessLayer.Color;
 
 public class Pawn extends ChessPiece {
 
-    private ChessMatch chessMatch;
+    private final ChessMatch chessMatch;
 
     public Pawn(Board board, Color color, ChessMatch chessMatch) {
         super(board, color);
@@ -23,7 +23,6 @@ public class Pawn extends ChessPiece {
     @Override
     public boolean[][] possibleMoves() {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
-
         Position p = new Position(0, 0);
         int direction = (getColor() == Color.WHITE) ? -1 : 1;
 
@@ -55,17 +54,22 @@ public class Pawn extends ChessPiece {
         }
 
         // En passant special move
-        if (position.getRow() == (getColor() == Color.WHITE ? 3 : 4)) {
+        // Determine the row where en passant is valid based on color
+        int enPassantRow = (getColor() == Color.WHITE) ? 3 : 4;
+        if (position.getRow() == enPassantRow) {
             Position left = new Position(position.getRow(), position.getColumn() - 1);
-            if (getBoard().positionExists(left) && isThereOpponentPiece(left) && getBoard().piece(left) == chessMatch.getEnPassantVulnerable()) {
+            if (getBoard().positionExists(left) && isThereOpponentPiece(left) &&
+                    getBoard().piece(left) == chessMatch.getEnPassantVulnerable()) {
                 mat[left.getRow() + direction][left.getColumn()] = true;
             }
             Position right = new Position(position.getRow(), position.getColumn() + 1);
-            if (getBoard().positionExists(right) && isThereOpponentPiece(right) && getBoard().piece(right) == chessMatch.getEnPassantVulnerable()) {
+            if (getBoard().positionExists(right) && isThereOpponentPiece(right) &&
+                    getBoard().piece(right) == chessMatch.getEnPassantVulnerable()) {
                 mat[right.getRow() + direction][right.getColumn()] = true;
             }
         }
 
         return mat;
     }
+
 }

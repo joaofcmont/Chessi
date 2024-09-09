@@ -36,6 +36,7 @@ public class ChessMatch {
         return match;
     }
 
+
     public int getTurn(){
         return turn;
     }
@@ -58,7 +59,7 @@ public class ChessMatch {
         if (!board.thereIsAPiece(position)) {
             throw new ChessException("There is no piece on the source position");
         }
-        if(currentPlayer!=((ChessPiece) board.piece(position)).getColor()){
+        if(currentPlayer!= ((ChessPiece) board.piece(position)).getColor()){
             throw new ChessException("The chosen piece is not yours");
         }
 
@@ -78,6 +79,43 @@ public class ChessMatch {
         if (!board.piece(source).possibleMove(target)) {
             throw new ChessException("The chosen piece cannot move to the Target position");
         }
+    }
+
+    private void rotateBoard() {
+        ChessPiece[][] currentBoard = getPieces();
+        int rows = board.getRows();
+        int columns = board.getColumns();
+        ChessPiece[][] rotatedBoard = new ChessPiece[rows][columns];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (currentBoard[i][j] != null) {
+                    int newRow = rows - 1 - i;
+                    int newCol = columns - 1 - j;
+
+                    rotatedBoard[newRow][newCol] = currentBoard[i][j];
+
+                }
+            }
+        }
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (board.thereIsAPiece(new Position(i,j))) {
+                    board.removePiece(new Position(i,j));
+                }
+            }
+        }
+        // Place the rotated pieces back on the cleared board
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (rotatedBoard[i][j] != null) {
+                    // Place each piece from the rotated board onto the original board
+                    board.placePiece(rotatedBoard[i][j], new Position(i, j));
+                }
+            }
+        }
+        nextTurn();
     }
 
 
@@ -124,13 +162,15 @@ public class ChessMatch {
         // Make the move
         Piece capturedPiece = makeMove(source, target);
 
+
         // Special move en passant
         if (movedPiece instanceof Pawn && (target.getRow() == source.getRow() - 2 || target.getRow() == source.getRow() + 2)) {
             enPassantVulnerable = movedPiece;
         } else {
             enPassantVulnerable = null;
         }
-        nextTurn();
+
+        rotateBoard();
         return (ChessPiece) capturedPiece;
     }
 
