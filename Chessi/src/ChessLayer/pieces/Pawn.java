@@ -49,6 +49,12 @@ public class Pawn extends ChessPiece {
         if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
             mat[p.getRow()][p.getColumn()] = true;
         }
+        // Diagonal captures
+        p.setValues(position.getRow() + direction, position.getColumn() + 1);
+        if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+        }
+
 
 
         // En passant special move
