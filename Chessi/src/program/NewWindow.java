@@ -6,10 +6,14 @@ import ChessLayer.ChessMatch;
 import ChessLayer.ChessPiece;
 import ChessLayer.ChessPosition;
 
+
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static program.UI.printBoard;
 
@@ -19,37 +23,57 @@ public class NewWindow {
     JPanel boardPanel = new JPanel(new GridLayout(8, 8));
     JButton[][] boardButtons = new JButton[8][8];
     private final ChessMatch chessMatch;
+    private JLabel turnLabel;
+    private JLabel playerLabel;
+    private  final JTextArea capturedPiecesArea ;
     private final Color highlightColor = new Color(186, 202, 68);    // Light green for highlights
 
     NewWindow() {
         chessMatch = new ChessMatch();
+        frame = new JFrame("Chess Game");
+        boardPanel = new JPanel(new GridLayout(8, 8));
+        boardButtons = new JButton[8][8];
+        turnLabel = new JLabel();
+        playerLabel = new JLabel();
+        capturedPiecesArea = new JTextArea(5, 20);
+        capturedPiecesArea.setEditable(false);  
         initializeGUI();
-        printMatch(chessMatch);
 
     }
 
     private void initializeGUI() {
-        frame = new JFrame("Chess Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(480, 480);
+        frame.setSize(700, 600);
         frame.setLayout(new BorderLayout());
 
-        boardPanel = new JPanel(new GridLayout(8, 8));
-        boardButtons = new JButton[8][8];
+        // Create the top panel for turn and player info
+        JPanel infoPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        infoPanel.add(turnLabel);
+        infoPanel.add(playerLabel);
+        frame.add(infoPanel, BorderLayout.NORTH);
+
+        // Create the main game panel
+        JPanel gamePanel = new JPanel(new BorderLayout());
+        gamePanel.add(boardPanel, BorderLayout.CENTER);
+
+        // Create the captured pieces panel
+        JPanel capturedPanel = new JPanel(new BorderLayout());
+        capturedPanel.add(new JLabel("Captured Pieces:"), BorderLayout.NORTH);
+        capturedPanel.add(new JScrollPane(capturedPiecesArea), BorderLayout.CENTER);
+        gamePanel.add(capturedPanel, BorderLayout.EAST);
+
+        frame.add(gamePanel, BorderLayout.CENTER);
 
         initializeBoard();
-
-
-        frame.add(boardPanel, BorderLayout.CENTER);
         frame.setVisible(true);
 
     }
 
-    public static void printMatch(ChessMatch chessMatch){
+    public void printMatch(){
         printBoard(chessMatch.getPieces());
-        System.out.println();
-        System.out.println("Turn : " + chessMatch.getTurn());
-        System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());
+        turnLabel.setText("Turn: " + chessMatch.getTurn());
+        playerLabel.setText("Current Player: " + chessMatch.getCurrentPlayer());
+        updateCapturedPieces(chessMatch.getCapturedPieces());
     }
 
     private void initializeBoard() {
@@ -91,6 +115,32 @@ public class NewWindow {
             }
         }
     }
+
+
+    private static String formatPieces(List<ChessPiece> pieces) {
+        return pieces.stream()
+                .map(ChessPiece::toString)
+                .collect(Collectors.joining(", "));
+    }
+
+    private void updateCapturedPieces(List<ChessPiece> captured){
+        List<ChessPiece> white = captured.stream()
+                .filter(x -> x.getColor() == ChessLayer.Color.WHITE)
+                .collect(Collectors.toList());
+        List<ChessPiece> black = captured.stream()
+                .filter(x -> x.getColor() == ChessLayer.Color.BLACK)
+                .collect(Collectors.toList());
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("White: ").append(formatPieces(white)).append("\n");
+        sb.append("Black: ").append(formatPieces(black));
+
+        capturedPiecesArea.setText(sb.toString());
+    }
+
+
+
+
     private String getPieceImageName(ChessPiece piece) {
         String color = piece.getColor().equals(ChessLayer.Color.WHITE) ? "white" : "black";
         String pieceName = piece.getClass().getSimpleName().toLowerCase();
@@ -152,6 +202,7 @@ public class NewWindow {
                     ChessPosition target = ChessPosition.fromPosition(clickedPosition);
                     chessMatch.performChessMove(source, target);
                     updateBoardGUI();
+                    printMatch(); // Call the updated printMatch() method
                 } catch (ChessException e) {
                     JOptionPane.showMessageDialog(frame, e.getMessage(), "Chess Error", JOptionPane.ERROR_MESSAGE);
                 } finally {

@@ -252,6 +252,16 @@ public class ChessMatch {
         return false;
     }
 
+    // This new method returns the captured pieces
+    public List<ChessPiece> getCapturedPieces() {
+        List<ChessPiece> capturedChessPieces = new ArrayList<>();
+        for (Piece piece : capturedPieces) {
+            if (piece instanceof ChessPiece) {
+                capturedChessPieces.add((ChessPiece) piece);
+            }
+        }
+        return capturedChessPieces;
+    }
 
 
 
@@ -259,6 +269,7 @@ public class ChessMatch {
         ChessPiece p = (ChessPiece) board.removePiece(source);
         p.increaseMoveCount();
         Piece capturedPiece = board.removePiece(target);
+
         board.placePiece(p, target);
 
         // Remove captured piece from the board if it's an en passant capture
