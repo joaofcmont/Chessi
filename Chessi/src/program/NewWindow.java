@@ -43,7 +43,7 @@ public class NewWindow {
 
     private void initializeGUI() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(700, 600);
+        frame.setSize(800, 800);
         frame.setLayout(new BorderLayout());
 
         // Create the top panel for turn and player info
