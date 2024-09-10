@@ -35,7 +35,7 @@ public class NewWindow {
         boardButtons = new JButton[8][8];
         turnLabel = new JLabel();
         playerLabel = new JLabel();
-        capturedPiecesArea = new JTextArea(5, 20);
+        capturedPiecesArea = new JTextArea(10, 10);
         capturedPiecesArea.setEditable(false);  
         initializeGUI();
 
@@ -43,7 +43,7 @@ public class NewWindow {
 
     private void initializeGUI() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 800);
+        frame.setSize(480, 480);
         frame.setLayout(new BorderLayout());
 
         // Create the top panel for turn and player info
