@@ -8,6 +8,7 @@ import ChessLayer.pieces.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class ChessMatch {
@@ -18,6 +19,7 @@ public class ChessMatch {
     private ChessPiece enPassantVulnerable;
     private final List<Piece> piecesOnTheBoard = new ArrayList<>();
     private final List<Piece> capturedPieces = new ArrayList<>();
+    private boolean check;
 
     public ChessMatch(){
         board = new Board(8,8);
@@ -263,6 +265,17 @@ public class ChessMatch {
         return capturedChessPieces;
     }
 
+    private void undoMove(Position source, Position target, Piece capturedPiece){
+        Piece p = board.removePiece(target);
+        board.placePiece(p,source);
+
+        if(capturedPiece!=null){
+            board.placePiece(capturedPiece,target);
+            capturedPieces.remove(capturedPiece);
+            piecesOnTheBoard.add(capturedPiece);
+        }
+    }
+
 
 
     private Piece makeMove(Position source, Position target) {
@@ -292,6 +305,20 @@ public class ChessMatch {
         }
 
         return capturedPiece;
+    }
+
+    private Color opponent(Color color){
+        return(color == Color.WHITE) ? Color.BLACK : Color.WHITE;
+    }
+
+    private ChessPiece kingColor(Color color){
+        List<Piece> list = piecesOnTheBoard.stream().filter( x-> ((ChessPiece)x).getColor() == color).collect(Collectors.toList());
+        for( Piece p : list){
+            if (p instanceof King){
+                return (ChessPiece) p;
+            }
+        }
+        throw new IllegalStateException("There is no " + color + " king on the board");
     }
 
 
