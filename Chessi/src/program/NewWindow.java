@@ -25,6 +25,7 @@ public class NewWindow {
     private final ChessMatch chessMatch;
     private JLabel turnLabel;
     private JLabel playerLabel;
+    private JLabel checkLabel;
     private  final JTextArea capturedPiecesArea ;
     private final Color highlightColor = new Color(186, 202, 68);    // Light green for highlights
 
@@ -35,6 +36,7 @@ public class NewWindow {
         boardButtons = new JButton[8][8];
         turnLabel = new JLabel();
         playerLabel = new JLabel();
+        checkLabel = new JLabel();
         capturedPiecesArea = new JTextArea(10, 10);
         capturedPiecesArea.setEditable(false);  
         initializeGUI();
@@ -50,6 +52,7 @@ public class NewWindow {
         JPanel infoPanel = new JPanel(new GridLayout(1, 2, 10, 0));
         infoPanel.add(turnLabel);
         infoPanel.add(playerLabel);
+        infoPanel.add(checkLabel);
         frame.add(infoPanel, BorderLayout.NORTH);
 
         // Create the main game panel
@@ -70,10 +73,17 @@ public class NewWindow {
     }
 
     public void printMatch(){
-        printBoard(chessMatch.getPieces());
+        updateBoardGUI(); // Add this line to update the board visually
         turnLabel.setText("Turn: " + chessMatch.getTurn());
         playerLabel.setText("Current Player: " + chessMatch.getCurrentPlayer());
         updateCapturedPieces(chessMatch.getCapturedPieces());
+        if (chessMatch.getCheck()) {
+            checkLabel.setText("CHECK!");
+            checkLabel.setForeground(Color.RED);
+            checkLabel.setVisible(true);
+        } else {
+            checkLabel.setVisible(false);
+        }
     }
 
     private void initializeBoard() {
