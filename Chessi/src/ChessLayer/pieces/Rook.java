@@ -76,8 +76,6 @@ public class Rook extends ChessPiece {
             Position queensideKingPosition = new Position(row, position.getColumn() - 4);
             if (chessMatch.canCastle(position, queensideKingPosition)) {
                 mat[row][position.getColumn() - 2] = true;
-            }else{
-                return null;
             }
         }
 
