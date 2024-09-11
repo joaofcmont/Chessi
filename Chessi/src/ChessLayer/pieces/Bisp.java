@@ -18,6 +18,12 @@ public class Bisp extends ChessPiece {
     @Override
     public boolean[][] possibleMoves() {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
+
+        // Ensure that 'position' is not null before proceeding
+        if (position == null) {
+            System.out.println("Error: Pawn position is null.");
+            return mat;
+        }
         Position p = new Position(0, 0);
 
         // Check diagonal top-left

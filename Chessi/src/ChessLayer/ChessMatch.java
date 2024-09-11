@@ -128,9 +128,8 @@ public class ChessMatch {
 
 
     public boolean[][] possibleMoves(ChessPosition p){
-        Position position = p.toPosition();
-        validateSourcePosition(position);
-        return board.piece(position).possibleMoves();
+        validateSourcePosition(p.toPosition());
+        return board.piece(p.toPosition()).possibleMoves();
     }
 
     public ChessPiece getEnPassantVulnerable() {
@@ -180,12 +179,12 @@ public class ChessMatch {
 
         //Check movement
 
-        if(testCheck(currentPlayer)){
+    /*    if(testCheck(currentPlayer)){
             undoMove(source,target,capturedPiece);
             throw new ChessException("You can't put yourself in check");
         }
 
-        check = (testCheck(opponentColor(currentPlayer)))? true : false;
+        check = (testCheck(opponentColor(currentPlayer)))? true : false; */
 
         rotateBoard();
         return (ChessPiece) capturedPiece;
@@ -346,7 +345,7 @@ public class ChessMatch {
         throw new IllegalStateException("There is no " + color + " king on the board");
     }
 
-    private boolean testCheck(Color color) {
+ /*   private boolean testCheck(Color color) {
         Position kingPosition = kingColor(color).getChessPosition().toPosition ();
         List<Piece> opponentPieces = piecesOnTheBoard.stream().filter(x -> ((ChessPiece)x).getColor() == opponentColor(color)).collect(Collectors.toList());
         for (Piece p : opponentPieces) {
@@ -356,7 +355,7 @@ public class ChessMatch {
             }
         }
         return false;
-    }
+    } */
 
 
 
