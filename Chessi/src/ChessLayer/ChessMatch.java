@@ -190,11 +190,12 @@ public class ChessMatch {
             throw new ChessException("You can't put yourself in check");
         }
 
-        check = (testCheck(opponentColor(currentPlayer)))? true : false;
+        check = testCheck(opponentColor(currentPlayer));
 
         if (testCheckMate(opponentColor(currentPlayer))){
             checkMate=true;
-        }else{
+        }
+        else{
             rotateBoard();
         }
         return (ChessPiece) capturedPiece;
@@ -229,55 +230,51 @@ public class ChessMatch {
     public boolean canCastle(Position source, Position target) {
         ChessPiece king = (ChessPiece) board.piece(source);
 
-        // Check if the king has moved
         if (king.getMoveCount() > 0) {
             return false;
         }
 
-        // Determine if castling is kingside or queenside
         int direction = (target.getColumn() > source.getColumn()) ? 1 : -1;
         Position rookPosition = (direction == 1) ? new Position(source.getRow(), source.getColumn() + 3) : new Position(source.getRow(), source.getColumn() - 4);
 
-        // Check if the rook position is within bounds
         if (!board.positionExists(rookPosition)) {
             return false;
         }
 
         ChessPiece rook = (ChessPiece) board.piece(rookPosition);
 
-        // Check if the rook has moved
         if (rook == null || rook.getMoveCount() > 0) {
             return false;
         }
 
-        // Ensure no pieces between the king and rook and no squares are under attack
         int start = Math.min(source.getColumn(), rookPosition.getColumn()) + 1;
         int end = Math.max(source.getColumn(), rookPosition.getColumn()) - 1;
         for (int i = start; i <= end; i++) {
             Position intermediatePosition = new Position(source.getRow(), i);
-
-            // Check if the intermediate position is within bounds
-            if (!board.positionExists(intermediatePosition) || board.thereIsAPiece(intermediatePosition) || isSquareUnderAttack(intermediatePosition, king.getColor())) {
+            if (!board.positionExists(intermediatePosition) || board.thereIsAPiece(intermediatePosition)) {
                 return false;
             }
         }
 
-        // Check that the king is not in check and does not pass through or land in check
-        Position kingPassThroughPosition = new Position(source.getRow(), source.getColumn() + direction);
-        return !isSquareUnderAttack(source, king.getColor()) && !isSquareUnderAttack(kingPassThroughPosition, king.getColor()) && !isSquareUnderAttack(target, king.getColor());
+        return !isSquareUnderAttack(source, king.getColor()) &&
+                !isSquareUnderAttack(new Position(source.getRow(), source.getColumn() + direction), king.getColor()) &&
+                !isSquareUnderAttack(target, king.getColor());
     }
 
 
     private boolean isSquareUnderAttack(Position position, Color color) {
-        // Loop through all opponent pieces to check if any can attack the given position
         for (Piece piece : piecesOnTheBoard) {
             ChessPiece chessPiece = (ChessPiece) piece;
-            if (chessPiece.getColor() != color && piece.possibleMove(position)) {
-                return true;
+            if (chessPiece.getColor() != color) {
+                boolean[][] moves = chessPiece.possibleMoves();
+                if (moves[position.getRow()][position.getColumn()]) {
+                    return true;
+                }
             }
         }
         return false;
     }
+
 
     // This new method returns the captured pieces
     public List<ChessPiece> getCapturedPieces() {
@@ -342,7 +339,7 @@ public class ChessMatch {
     private ChessPiece kingColor(Color color) {
         List<Piece> list = piecesOnTheBoard.stream()
                 .filter(x -> ((ChessPiece) x).getColor() == color)
-                .collect(Collectors.toList());
+                .toList();
 
 
         for (Piece p : list) {

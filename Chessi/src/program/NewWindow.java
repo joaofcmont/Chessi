@@ -22,7 +22,7 @@ public class NewWindow {
     JFrame frame = new JFrame();
     JPanel boardPanel = new JPanel(new GridLayout(8, 8));
     JButton[][] boardButtons = new JButton[8][8];
-    private final ChessMatch chessMatch;
+    private ChessMatch chessMatch;
     private JLabel turnLabel;
     private JLabel playerLabel;
     private JLabel checkLabel;
@@ -77,11 +77,16 @@ public class NewWindow {
         turnLabel.setText("Turn: " + chessMatch.getTurn());
         playerLabel.setText("Current Player: " + chessMatch.getCurrentPlayer());
         updateCapturedPieces(chessMatch.getCapturedPieces());
-        if (chessMatch.getCheck()) {
+        if (chessMatch.getCheck() && !chessMatch.getCheckMate()) {
             checkLabel.setText("CHECK!");
             checkLabel.setForeground(Color.RED);
             checkLabel.setVisible(true);
-        } else {
+        } else if (chessMatch.getCheckMate()) {
+            checkLabel.setText("CHECK MATE!");
+            checkLabel.setForeground(Color.RED);
+            checkLabel.setVisible(true);
+            endGame();
+        }else{
             checkLabel.setVisible(false);
         }
     }
@@ -213,6 +218,7 @@ public class NewWindow {
                     chessMatch.performChessMove(source, target);
                     updateBoardGUI();
                     printMatch(); // Call the updated printMatch() method
+
                 } catch (ChessException e) {
                     JOptionPane.showMessageDialog(frame, e.getMessage(), "Chess Error", JOptionPane.ERROR_MESSAGE);
                 } finally {
@@ -221,6 +227,46 @@ public class NewWindow {
                 }
             }
         }
+    }
+    private void endGame() {
+        String winner = (chessMatch.getCurrentPlayer() == ChessLayer.Color.WHITE) ? "Black" : "White";
+        JOptionPane.showMessageDialog(frame,
+                "Checkmate! " + winner + " wins!",
+                "Game Over",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        // Disable all board buttons
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                boardButtons[i][j].setEnabled(false);
+            }
+        }
+
+        // add a "New Game" button
+        JButton newGameButton = new JButton("New Game");
+        newGameButton.addActionListener(e -> startNewGame());
+        frame.add(newGameButton, BorderLayout.SOUTH);
+        frame.revalidate();
+    }
+
+    private void startNewGame() {
+        // Reset the chess match
+        chessMatch = new ChessMatch();
+
+        // Re-enable all board buttons
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                boardButtons[i][j].setEnabled(true);
+            }
+        }
+
+        // Update the board GUI
+        updateBoardGUI();
+        printMatch();
+
+        // Remove the "New Game" button
+        frame.remove(frame.getContentPane().getComponent(frame.getContentPane().getComponentCount() - 1));
+        frame.revalidate();
     }
 
 
