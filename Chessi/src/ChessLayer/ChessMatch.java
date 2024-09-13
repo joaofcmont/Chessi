@@ -19,6 +19,8 @@ public class ChessMatch {
     private ChessPiece enPassantVulnerable;
     private  List<Piece> piecesOnTheBoard = new ArrayList<>();
     private  List<Piece> capturedPieces = new ArrayList<>();
+
+    private boolean checkMate;
     private boolean check;
 
     public ChessMatch(){
@@ -54,6 +56,10 @@ public class ChessMatch {
 
     public boolean getCheck(){
         return check;
+    }
+
+    public boolean getCheckMate(){
+        return checkMate;
     }
 
 
@@ -355,6 +361,31 @@ public class ChessMatch {
             }
         }
         return false;
+    }
+
+    private boolean testCheckMate(Color color){
+        if(!testCheck(color)){
+            return false;
+        }
+        List <Piece> list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece)x).getColor() == color ).collect(Collectors.toList());
+        for(Piece p: list){
+           boolean[][] mat = p.possibleMoves();
+           for(int i=0;i<board.getRows();i++){
+               for(int j=0; j<board.getColumns();j++){
+                   if(mat[i][j]){
+                       Position source = ((ChessPiece)p).getChessPosition().toPosition();
+                       Position target = new Position(i,j);
+                       Piece capturedPiece = makeMove(source,target);
+                       boolean testCheck = testCheck(color);
+                       undoMove(source,target,capturedPiece);
+                       if(!testCheck){
+                           return false;
+                       }
+                   }
+               }
+           }
+        }
+        return true;
     }
 
 
