@@ -18,6 +18,12 @@ public class Rook extends ChessPiece {
     @Override
     public boolean[][] possibleMoves() {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
+
+        // Check if position is set, if not, return an empty moves matrix.
+        if (position == null) {
+            return mat; // Empty possible moves since the position is null
+        }
+
         Position p = new Position(0, 0);
 
         // Above

@@ -20,9 +20,16 @@ public class Knight extends ChessPiece {
         return p == null || p.getColor() != getColor();
     }
 
+
     @Override
     public boolean[][] possibleMoves() {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
+
+        // Check if position is set, if not, return an empty moves matrix.
+        if (position == null) {
+            return mat; // Empty possible moves since the position is null
+        }
+
         Position p = new Position(0, 0);
 
         p.setValues(position.getRow() - 1, position.getColumn() - 2);

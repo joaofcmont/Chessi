@@ -29,6 +29,11 @@ public class King extends ChessPiece {
     public boolean[][] possibleMoves() {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
 
+        // Check if position is set, if not, return an empty moves matrix.
+        if (position == null) {
+            return mat; // Empty possible moves since the position is null
+        }
+
         Position p = new Position(position.getRow(),position.getColumn());
 
         //check above

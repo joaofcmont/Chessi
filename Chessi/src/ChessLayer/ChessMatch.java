@@ -110,6 +110,8 @@ public class ChessMatch {
                     // Add the piece back to the piecesOnTheBoard list
                     piecesOnTheBoard.add(rotatedBoard[newRow][newCol]);
                 }
+
+
             }
         }
 
