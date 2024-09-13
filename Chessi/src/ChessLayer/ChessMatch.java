@@ -192,7 +192,11 @@ public class ChessMatch {
 
         check = (testCheck(opponentColor(currentPlayer)))? true : false;
 
-        rotateBoard();
+        if (testCheckMate(opponentColor(currentPlayer))){
+            checkMate=true;
+        }else{
+            rotateBoard();
+        }
         return (ChessPiece) capturedPiece;
     }
 
