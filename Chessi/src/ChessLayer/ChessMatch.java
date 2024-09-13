@@ -20,6 +20,7 @@ public class ChessMatch {
     private  List<Piece> piecesOnTheBoard = new ArrayList<>();
     private  List<Piece> capturedPieces = new ArrayList<>();
 
+    private ChessPiece promoted;
     private boolean checkMate;
     private boolean check;
 
@@ -60,6 +61,10 @@ public class ChessMatch {
 
     public boolean getCheckMate(){
         return checkMate;
+    }
+
+    public ChessPiece getPromoted(){
+        return promoted;
     }
 
 
@@ -192,6 +197,15 @@ public class ChessMatch {
             throw new ChessException("You can't put yourself in check");
         }
 
+        // special move, promotion
+        promoted = null;
+        if(movedPiece instanceof Pawn){
+            if(target.getRow() == 0){
+                promoted = (ChessPiece)board.piece(target);
+            }
+        }
+
+
         check = testCheck(opponentColor(currentPlayer));
 
         if (testCheckMate(opponentColor(currentPlayer))){
@@ -229,7 +243,45 @@ public class ChessMatch {
         }
     }
 
-    public boolean canCastle(Position source, Position target) {
+    // Inside ChessMatch class
+    public void replacePromotedPiece(String type) {
+        if (promoted == null) {
+            throw new IllegalStateException("There is no piece to be promoted");
+        }
+        ChessPiece newPiece;
+        switch (type) {
+            case "queen":
+                newPiece = new Queen(board, promoted.getColor());
+                break;
+            case "rook":
+                newPiece = new Rook(board, promoted.getColor(),this);
+                break;
+            case "bishop":
+                newPiece = new Bisp(board, promoted.getColor());
+                break;
+            case "knight":
+                newPiece = new Knight(board, promoted.getColor());
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid promotion type");
+        }
+        // Remove the pawn and place the new piece on the board
+        board.removePiece(promoted.getChessPosition().toPosition());
+        board.placePiece(newPiece, promoted.getChessPosition().toPosition());
+
+        // Update the sets of pieces
+        piecesOnTheBoard.remove(promoted);
+        piecesOnTheBoard.add(newPiece);
+
+        // Clear the promoted piece variable after replacement
+        promoted = null;
+    }
+
+
+
+
+
+        public boolean canCastle(Position source, Position target) {
         ChessPiece king = (ChessPiece) board.piece(source);
 
         if (king.getMoveCount() > 0) {

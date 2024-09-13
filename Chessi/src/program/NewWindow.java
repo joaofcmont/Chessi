@@ -196,6 +196,28 @@ public class NewWindow {
         }
     }
 
+    public void promotePawn(ChessPosition position){
+        String[] options = {"Queen", "Rook", "Bishop", "Knight"};
+        String choice = (String) JOptionPane.showInputDialog(
+                frame,
+                "Choose a piece to promote to:",
+                "Pawn Promotion",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                options,
+                options[0]);
+        // Perform the promotion if the user selected a piece
+        if (choice != null) {
+            try {
+                chessMatch.replacePromotedPiece(choice.toLowerCase());
+                updateBoardGUI(); // Update the board to reflect the promoted piece
+            } catch (ChessException e) {
+                JOptionPane.showMessageDialog(frame, "Error promoting pawn: " + e.getMessage(), "Promotion Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+
     private Position selectedPosition = null;
 
     private void handleButtonClick(int row, int col) {
@@ -219,6 +241,12 @@ public class NewWindow {
                     updateBoardGUI();
                     printMatch(); // Call the updated printMatch() method
 
+                    // Check if a pawn was promoted and handle promotion
+                    if (chessMatch.getPromoted() != null) {
+                        promotePawn(target); // Pass the target position
+                        updateBoardGUI();   // Refresh GUI after promotion
+
+                    }
                 } catch (ChessException e) {
                     JOptionPane.showMessageDialog(frame, e.getMessage(), "Chess Error", JOptionPane.ERROR_MESSAGE);
                 } finally {
